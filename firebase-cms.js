@@ -107,6 +107,7 @@ async function loadProjectsSection() {
                 }
             });
         }
+        // If no projects in Firestore, keep the default HTML content
     } catch (error) {
         console.error('Error loading projects section:', error);
     }
@@ -220,6 +221,7 @@ async function loadServicesSection() {
                 }
             });
         }
+        // If no services in Firestore, keep the default HTML content
     } catch (error) {
         console.error('Error loading services section:', error);
     }
@@ -273,6 +275,7 @@ async function loadNewsSection() {
                 }
             });
         }
+        // If no news in Firestore, keep the default HTML content
     } catch (error) {
         console.error('Error loading news section:', error);
     }

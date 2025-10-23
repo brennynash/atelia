@@ -14,13 +14,19 @@ class ArchitecturalAnimations {
     setupIntersectionObserver() {
         const observerOptions = {
             threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            rootMargin: '0px 0px -20px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                } else {
+                    // Keep elements visible once they've been shown to prevent disappearing
+                    // Only remove visibility for elements that should hide (like modals, etc.)
+                    if (!entry.target.classList.contains('should-hide')) {
+                        entry.target.classList.add('visible');
+                    }
                 }
             });
         }, observerOptions);
