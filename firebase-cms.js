@@ -85,7 +85,8 @@ async function loadProjectsSection() {
         const projectsGrid = document.querySelector('.projects-grid');
         
         if (projectsGrid && !projectsSnapshot.empty) {
-            projectsGrid.innerHTML = ''; // Clear existing
+            // Only clear existing content if we have data to replace it with
+            projectsGrid.innerHTML = '';
             
             // Limit to 4 projects on homepage to avoid overload
             let count = 0;
@@ -107,7 +108,7 @@ async function loadProjectsSection() {
                 }
             });
         }
-        // If no projects in Firestore, keep the default HTML content
+        // If no projects in Firestore, keep the default HTML content (don't clear it)
     } catch (error) {
         console.error('Error loading projects section:', error);
     }
@@ -198,7 +199,8 @@ async function loadServicesSection() {
         const servicesGrid = document.querySelector('.services-grid');
         
         if (servicesGrid && !servicesSnapshot.empty) {
-            servicesGrid.innerHTML = ''; // Clear existing
+            // Only clear existing content if we have data to replace it with
+            servicesGrid.innerHTML = '';
             
             // Limit to 3 services on homepage to avoid overload
             let count = 0;
@@ -221,7 +223,7 @@ async function loadServicesSection() {
                 }
             });
         }
-        // If no services in Firestore, keep the default HTML content
+        // If no services in Firestore, keep the default HTML content (don't clear it)
     } catch (error) {
         console.error('Error loading services section:', error);
     }
@@ -249,7 +251,8 @@ async function loadNewsSection() {
         const newsGrid = document.querySelector('.news-grid');
         
         if (newsGrid && !newsSnapshot.empty) {
-            newsGrid.innerHTML = ''; // Clear existing
+            // Only clear existing content if we have data to replace it with
+            newsGrid.innerHTML = '';
             
             // Limit to 4 news items on homepage to avoid overload
             let count = 0;
@@ -275,7 +278,7 @@ async function loadNewsSection() {
                 }
             });
         }
-        // If no news in Firestore, keep the default HTML content
+        // If no news in Firestore, keep the default HTML content (don't clear it)
     } catch (error) {
         console.error('Error loading news section:', error);
     }
