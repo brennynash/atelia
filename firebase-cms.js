@@ -32,6 +32,7 @@ async function loadAllContent() {
     await Promise.all([
         loadHeroSection(),
         loadProjectsSection(),
+        loadTestimonialsSection(),
         loadAboutSection(),
         loadServicesSection(),
         loadNewsSection(),
@@ -78,28 +79,77 @@ async function loadProjectsSection() {
             if (cta && data.cta) cta.textContent = data.cta;
         }
 
-        // Load project items
+        // Load project items (limited to 4 for homepage)
         const projectsSnapshot = await getDocs(collection(db, 'projects'));
         const projectsGrid = document.querySelector('.projects-grid');
         
         if (projectsGrid && !projectsSnapshot.empty) {
             projectsGrid.innerHTML = ''; // Clear existing
             
+            // Limit to 4 projects on homepage to avoid overload
+            let count = 0;
+            const maxProjects = 4;
+            
             projectsSnapshot.forEach(doc => {
-                const project = doc.data();
-                const projectItem = document.createElement('div');
-                projectItem.className = 'project-item stagger-item architectural-hover';
-                projectItem.innerHTML = `
-                    <div class="project-image">
-                        <img src="${project.image || ''}" alt="${project.alt || project.name}">
-                    </div>
-                    <h3 class="project-caption">${project.name || ''}</h3>
-                `;
-                projectsGrid.appendChild(projectItem);
+                if (count < maxProjects) {
+                    const project = doc.data();
+                    const projectItem = document.createElement('div');
+                    projectItem.className = 'project-item stagger-item architectural-hover';
+                    projectItem.innerHTML = `
+                        <div class="project-image">
+                            <img src="${project.image || ''}" alt="${project.alt || project.name}">
+                        </div>
+                        <h3 class="project-caption">${project.name || ''}</h3>
+                    `;
+                    projectsGrid.appendChild(projectItem);
+                    count++;
+                }
             });
         }
     } catch (error) {
         console.error('Error loading projects section:', error);
+    }
+}
+
+// Load Testimonials Section
+async function loadTestimonialsSection() {
+    try {
+        const testimonialsDoc = await getDoc(doc(db, 'content', 'testimonials'));
+        const testimonialsSection = document.getElementById('testimonials');
+        
+        if (testimonialsSection) {
+            if (testimonialsDoc.exists()) {
+                const data = testimonialsDoc.data();
+                
+                // Hide section if disabled
+                if (data.enabled === false) {
+                    testimonialsSection.style.display = 'none';
+                    return;
+                } else {
+                    testimonialsSection.style.display = 'block';
+                }
+                
+                // Update content
+                const title = document.querySelector('.testimonials-title');
+                const description = document.querySelector('.testimonials-description');
+                const cta = document.querySelector('.view-testimonials-link');
+                const iframe = document.querySelector('.testimonials-video iframe');
+                
+                if (title && data.title) title.textContent = data.title;
+                if (description && data.description) description.textContent = data.description;
+                if (cta && data.cta) cta.textContent = data.cta;
+                
+                // Update video
+                if (iframe && data.embedUrl) {
+                    iframe.src = data.embedUrl;
+                    if (data.videoTitle) {
+                        iframe.title = data.videoTitle;
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error loading testimonials section:', error);
     }
 }
 
@@ -141,25 +191,32 @@ async function loadServicesSection() {
             if (cta && data.cta) cta.textContent = data.cta;
         }
 
-        // Load service items
+        // Load service items (limited to 3 for homepage)
         const servicesSnapshot = await getDocs(collection(db, 'services'));
         const servicesGrid = document.querySelector('.services-grid');
         
         if (servicesGrid && !servicesSnapshot.empty) {
             servicesGrid.innerHTML = ''; // Clear existing
             
+            // Limit to 3 services on homepage to avoid overload
+            let count = 0;
+            const maxServices = 3;
+            
             servicesSnapshot.forEach(doc => {
-                const service = doc.data();
-                const serviceCard = document.createElement('div');
-                serviceCard.className = 'service-card stagger-item architectural-hover';
-                serviceCard.innerHTML = `
-                    <div class="service-image">
-                        <img src="${service.image || ''}" alt="${service.alt || service.name}">
-                    </div>
-                    <h3 class="service-name">${service.name || ''}</h3>
-                    <a href="#${service.name ? service.name.toLowerCase().replace(/\s+/g, '-') : ''}" class="service-link">Learn more →</a>
-                `;
-                servicesGrid.appendChild(serviceCard);
+                if (count < maxServices) {
+                    const service = doc.data();
+                    const serviceCard = document.createElement('div');
+                    serviceCard.className = 'service-card stagger-item architectural-hover';
+                    serviceCard.innerHTML = `
+                        <div class="service-image">
+                            <img src="${service.image || ''}" alt="${service.alt || service.name}">
+                        </div>
+                        <h3 class="service-name">${service.name || ''}</h3>
+                        <a href="#${service.name ? service.name.toLowerCase().replace(/\s+/g, '-') : ''}" class="service-link">Learn more →</a>
+                    `;
+                    servicesGrid.appendChild(serviceCard);
+                    count++;
+                }
             });
         }
     } catch (error) {
@@ -184,28 +241,35 @@ async function loadNewsSection() {
             if (cta && data.cta) cta.textContent = data.cta;
         }
 
-        // Load news items
+        // Load news items (limited to 4 for homepage)
         const newsSnapshot = await getDocs(collection(db, 'news'));
         const newsGrid = document.querySelector('.news-grid');
         
         if (newsGrid && !newsSnapshot.empty) {
             newsGrid.innerHTML = ''; // Clear existing
             
+            // Limit to 4 news items on homepage to avoid overload
+            let count = 0;
+            const maxNews = 4;
+            
             newsSnapshot.forEach(doc => {
-                const news = doc.data();
-                const newsCard = document.createElement('article');
-                newsCard.className = 'news-card stagger-item architectural-hover';
-                newsCard.innerHTML = `
-                    <div class="news-image">
-                        <img src="${news.image || ''}" alt="${news.alt || news.title}">
-                    </div>
-                    <div class="news-content">
-                        <span class="news-date">${news.date || ''}</span>
-                        <h3 class="news-article-title">${news.title || ''}</h3>
-                        <a href="#${news.title ? news.title.toLowerCase().replace(/\s+/g, '-') : ''}" class="news-link">${news.linkText || 'Learn more'}</a>
-                    </div>
-                `;
-                newsGrid.appendChild(newsCard);
+                if (count < maxNews) {
+                    const news = doc.data();
+                    const newsCard = document.createElement('article');
+                    newsCard.className = 'news-card stagger-item architectural-hover';
+                    newsCard.innerHTML = `
+                        <div class="news-image">
+                            <img src="${news.image || ''}" alt="${news.alt || news.title}">
+                        </div>
+                        <div class="news-content">
+                            <span class="news-date">${news.date || ''}</span>
+                            <h3 class="news-article-title">${news.title || ''}</h3>
+                            <a href="#${news.title ? news.title.toLowerCase().replace(/\s+/g, '-') : ''}" class="news-link">${news.linkText || 'Learn more'}</a>
+                        </div>
+                    `;
+                    newsGrid.appendChild(newsCard);
+                    count++;
+                }
             });
         }
     } catch (error) {

@@ -113,6 +113,37 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.transition = 'opacity 0.8s ease-in-out';
         document.body.style.opacity = '1';
     }, 100);
+    
+    // Mobile Menu Toggle
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navigation = document.querySelector('.navigation');
+    
+    if (mobileMenuToggle && navigation) {
+        mobileMenuToggle.addEventListener('click', () => {
+            navigation.classList.toggle('active');
+            
+            // Toggle icon between menu and close
+            const icon = mobileMenuToggle.textContent;
+            mobileMenuToggle.textContent = icon === '☰' ? '✕' : '☰';
+        });
+        
+        // Close mobile menu when clicking on a link
+        const navLinks = navigation.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navigation.classList.remove('active');
+                mobileMenuToggle.textContent = '☰';
+            });
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navigation.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                navigation.classList.remove('active');
+                mobileMenuToggle.textContent = '☰';
+            }
+        });
+    }
 });
 
 // Architectural scroll progress indicator

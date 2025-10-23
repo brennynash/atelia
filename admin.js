@@ -26,6 +26,8 @@ let projects = [];
 let services = [];
 let newsItems = [];
 let bookings = [];
+let heroSlides = [];
+let sliderSettings = {};
 
 // Initialize admin panel
 document.addEventListener('DOMContentLoaded', function() {
@@ -45,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (user) {
             currentUser = user;
             showAdminPanel();
+            loadDashboardStats(); // Load dashboard stats first
             loadContent();
             loadBookings(); // Load bookings after authentication
         } else {
@@ -105,6 +108,79 @@ function showStatus(message, type) {
     }
 }
 
+// Load Dashboard Statistics
+async function loadDashboardStats() {
+    try {
+        // Count projects
+        const projectsSnapshot = await getDocs(collection(db, 'projects'));
+        const projectsCount = projectsSnapshot.size;
+        document.getElementById('totalProjects').textContent = projectsCount;
+        
+        // Count services
+        const servicesSnapshot = await getDocs(collection(db, 'services'));
+        const servicesCount = servicesSnapshot.size;
+        document.getElementById('totalServices').textContent = servicesCount;
+        
+        // Count news items
+        const newsSnapshot = await getDocs(collection(db, 'news'));
+        const newsCount = newsSnapshot.size;
+        document.getElementById('totalNews').textContent = newsCount;
+        
+        // Count bookings
+        const bookingsSnapshot = await getDocs(collection(db, 'bookings'));
+        const bookingsCount = bookingsSnapshot.size;
+        document.getElementById('totalBookings').textContent = bookingsCount;
+        
+        // Load recent bookings (last 5)
+        const recentBookingsQuery = query(
+            collection(db, 'bookings'), 
+            orderBy('timestamp', 'desc')
+        );
+        const recentBookingsSnapshot = await getDocs(recentBookingsQuery);
+        
+        const recentBookingsList = document.getElementById('recentBookingsList');
+        if (recentBookingsList) {
+            if (recentBookingsSnapshot.empty) {
+                recentBookingsList.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">No bookings yet.</p>';
+            } else {
+                recentBookingsList.innerHTML = '';
+                let count = 0;
+                recentBookingsSnapshot.forEach(doc => {
+                    if (count < 5) { // Show only last 5
+                        const booking = doc.data();
+                        const bookingDate = booking.timestamp ? new Date(booking.timestamp.toDate()).toLocaleDateString() : 'N/A';
+                        
+                        const bookingItem = document.createElement('div');
+                        bookingItem.className = 'recent-booking-item';
+                        bookingItem.innerHTML = `
+                            <div class="recent-booking-header">
+                                <span class="recent-booking-name">${booking.name || 'N/A'}</span>
+                                <span class="recent-booking-date">${bookingDate}</span>
+                            </div>
+                            <div class="recent-booking-service">${booking.service || 'General Inquiry'} - ${booking.email || ''}</div>
+                        `;
+                        
+                        // Make it clickable to go to bookings section
+                        bookingItem.style.cursor = 'pointer';
+                        bookingItem.addEventListener('click', () => {
+                            document.querySelector('[data-section="bookings"]').click();
+                        });
+                        
+                        recentBookingsList.appendChild(bookingItem);
+                        count++;
+                    }
+                });
+            }
+        }
+        
+    } catch (error) {
+        console.error('Error loading dashboard stats:', error);
+    }
+}
+
+// Expose function globally for refresh
+window.loadDashboardStats = loadDashboardStats;
+
 // Load content from Firestore
 async function loadContent() {
     try {
@@ -122,6 +198,12 @@ async function loadContent() {
             if (currentButton) currentButton.textContent = data.buttonText || 'N/A';
         }
 
+        // Load hero slides
+        await loadHeroSlides();
+        
+        // Load slider settings
+        await loadSliderSettings();
+
         // Load projects section
         const projectsDoc = await getDoc(doc(db, 'content', 'projects'));
         if (projectsDoc.exists()) {
@@ -138,6 +220,21 @@ async function loadContent() {
             projects.push({ id: doc.id, ...doc.data() });
         });
         renderProjectsList();
+
+        // Load testimonials section
+        const testimonialsDoc = await getDoc(doc(db, 'content', 'testimonials'));
+        if (testimonialsDoc.exists()) {
+            const data = testimonialsDoc.data();
+            document.getElementById('testimonialsEnabled').checked = data.enabled !== false; // Default to true
+            document.getElementById('testimonialsTitle').value = data.title || '';
+            document.getElementById('testimonialsDescription').value = data.description || '';
+            document.getElementById('testimonialsCTA').value = data.cta || '';
+            document.getElementById('testimonialsVideoUrl').value = data.videoUrl || '';
+            document.getElementById('testimonialsVideoTitle').value = data.videoTitle || '';
+        } else {
+            // Set defaults if no data exists
+            document.getElementById('testimonialsEnabled').checked = true;
+        }
 
         // Load about section
         const aboutDoc = await getDoc(doc(db, 'content', 'about'));
@@ -255,6 +352,66 @@ async function saveProjects() {
         showStatus('Error saving projects section: ' + error.message, 'error');
     }
 }
+
+async function saveTestimonials() {
+    try {
+        const enabled = document.getElementById('testimonialsEnabled').checked;
+        const videoUrl = document.getElementById('testimonialsVideoUrl').value;
+        
+        // Convert YouTube URL to embed URL
+        const embedUrl = convertYouTubeUrl(videoUrl);
+        
+        await setDoc(doc(db, 'content', 'testimonials'), {
+            enabled: enabled,
+            title: document.getElementById('testimonialsTitle').value,
+            description: document.getElementById('testimonialsDescription').value,
+            cta: document.getElementById('testimonialsCTA').value,
+            videoUrl: videoUrl,
+            embedUrl: embedUrl,
+            videoTitle: document.getElementById('testimonialsVideoTitle').value
+        });
+        showStatus('Testimonials section saved! Refresh the homepage to see changes.', 'success');
+    } catch (error) {
+        showStatus('Error saving testimonials section: ' + error.message, 'error');
+    }
+}
+
+// Helper function to convert YouTube URL to embed URL
+function convertYouTubeUrl(url) {
+    if (!url) return '';
+    
+    // If it's already an embed URL, return as is
+    if (url.includes('youtube.com/embed/')) {
+        return url;
+    }
+    
+    // Extract video ID from various YouTube URL formats
+    let videoId = '';
+    
+    // Format: https://www.youtube.com/watch?v=VIDEO_ID
+    if (url.includes('youtube.com/watch?v=')) {
+        videoId = url.split('watch?v=')[1]?.split('&')[0];
+    }
+    // Format: https://youtu.be/VIDEO_ID
+    else if (url.includes('youtu.be/')) {
+        videoId = url.split('youtu.be/')[1]?.split('?')[0];
+    }
+    // Format: https://www.youtube.com/v/VIDEO_ID
+    else if (url.includes('youtube.com/v/')) {
+        videoId = url.split('youtube.com/v/')[1]?.split('?')[0];
+    }
+    
+    // Return embed URL if video ID found
+    if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}`;
+    }
+    
+    // Return original URL if can't parse
+    return url;
+}
+
+// Expose functions globally
+window.saveTestimonials = saveTestimonials;
 
 async function saveAbout() {
     try {
@@ -838,3 +995,240 @@ window.updateBookingStatus = updateBookingStatus;
 window.deleteBooking = deleteBooking;
 window.refreshBookings = refreshBookings;
 window.copyToClipboard = copyToClipboard;
+
+// Hero Slider Management Functions
+async function loadHeroSlides() {
+    try {
+        const slidesSnapshot = await getDocs(collection(db, 'heroSlides'));
+        heroSlides = [];
+        
+        slidesSnapshot.forEach(doc => {
+            const slideData = doc.data();
+            heroSlides.push({
+                id: doc.id,
+                ...slideData
+            });
+        });
+
+        // Sort slides by order
+        heroSlides.sort((a, b) => (a.order || 0) - (b.order || 0));
+        
+        renderHeroSlidesList();
+    } catch (error) {
+        console.error('Error loading hero slides:', error);
+        showStatus('Error loading hero slides: ' + error.message, 'error');
+    }
+}
+
+async function loadSliderSettings() {
+    try {
+        const settingsDoc = await getDoc(doc(db, 'content', 'sliderSettings'));
+        if (settingsDoc.exists()) {
+            sliderSettings = settingsDoc.data();
+            
+            // Update UI elements
+            const durationInput = document.getElementById('sliderDuration');
+            const enabledCheckbox = document.getElementById('sliderEnabled');
+            
+            if (durationInput) durationInput.value = sliderSettings.duration || 5;
+            if (enabledCheckbox) enabledCheckbox.checked = sliderSettings.enabled !== false;
+        }
+    } catch (error) {
+        console.error('Error loading slider settings:', error);
+    }
+}
+
+function renderHeroSlidesList() {
+    const container = document.getElementById('heroSlidesList');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    if (heroSlides.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">No slides added yet. Click "Add New Slide" to get started.</p>';
+        return;
+    }
+    
+    heroSlides.forEach((slide, index) => {
+        const slideDiv = document.createElement('div');
+        slideDiv.className = 'item-card';
+        slideDiv.innerHTML = `
+            <h4>Slide ${index + 1} ${slide.title ? `- ${slide.title}` : ''}</h4>
+            <div class="grid">
+                <div class="form-group">
+                    <label>Title:</label>
+                    <input type="text" id="slideTitle_${slide.id}" value="${slide.title || ''}" placeholder="Optional title for this slide">
+                </div>
+                <div class="form-group">
+                    <label>Image URL:</label>
+                    <input type="text" id="slideImage_${slide.id}" value="${slide.imageUrl || ''}" readonly>
+                    <button onclick="uploadHeroSlideImage('${slide.id}')" class="btn" style="margin-top: 10px;">Upload Image</button>
+                    ${slide.imageUrl ? `<img src="${slide.imageUrl}" class="image-preview" alt="Preview">` : ''}
+                </div>
+                <div class="form-group">
+                    <label>Order:</label>
+                    <input type="number" id="slideOrder_${slide.id}" value="${slide.order || index}" min="0">
+                    <small>Lower numbers appear first</small>
+                </div>
+                <div class="form-group">
+                    <label>Alt Text:</label>
+                    <input type="text" id="slideAlt_${slide.id}" value="${slide.alt || ''}" placeholder="Description for accessibility">
+                </div>
+            </div>
+            <div class="btn-group">
+                <button onclick="updateHeroSlide('${slide.id}')" class="btn btn-success">Update</button>
+                <button onclick="deleteHeroSlide('${slide.id}')" class="btn btn-danger">Delete</button>
+                ${index > 0 ? `<button onclick="moveSlideUp('${slide.id}')" class="btn">Move Up</button>` : ''}
+                ${index < heroSlides.length - 1 ? `<button onclick="moveSlideDown('${slide.id}')" class="btn">Move Down</button>` : ''}
+            </div>
+        `;
+        container.appendChild(slideDiv);
+    });
+}
+
+async function addHeroSlide() {
+    try {
+        const newSlide = {
+            title: '',
+            imageUrl: '',
+            alt: '',
+            order: heroSlides.length,
+            createdAt: new Date()
+        };
+        
+        const docRef = await addDoc(collection(db, 'heroSlides'), newSlide);
+        showStatus('New slide added! Please upload an image.', 'success');
+        await loadHeroSlides();
+    } catch (error) {
+        console.error('Error adding hero slide:', error);
+        showStatus('Error adding slide: ' + error.message, 'error');
+    }
+}
+
+async function updateHeroSlide(slideId) {
+    try {
+        const title = document.getElementById(`slideTitle_${slideId}`).value;
+        const imageUrl = document.getElementById(`slideImage_${slideId}`).value;
+        const order = parseInt(document.getElementById(`slideOrder_${slideId}`).value) || 0;
+        const alt = document.getElementById(`slideAlt_${slideId}`).value;
+        
+        if (!imageUrl) {
+            showStatus('Please upload an image for this slide.', 'error');
+            return;
+        }
+        
+        await updateDoc(doc(db, 'heroSlides', slideId), {
+            title: title,
+            imageUrl: imageUrl,
+            order: order,
+            alt: alt,
+            updatedAt: new Date()
+        });
+        
+        showStatus('Slide updated successfully!', 'success');
+        await loadHeroSlides();
+    } catch (error) {
+        console.error('Error updating hero slide:', error);
+        showStatus('Error updating slide: ' + error.message, 'error');
+    }
+}
+
+async function deleteHeroSlide(slideId) {
+    if (!confirm('Are you sure you want to delete this slide?')) return;
+    
+    try {
+        await deleteDoc(doc(db, 'heroSlides', slideId));
+        showStatus('Slide deleted successfully!', 'success');
+        await loadHeroSlides();
+    } catch (error) {
+        console.error('Error deleting hero slide:', error);
+        showStatus('Error deleting slide: ' + error.message, 'error');
+    }
+}
+
+async function moveSlideUp(slideId) {
+    const slideIndex = heroSlides.findIndex(slide => slide.id === slideId);
+    if (slideIndex <= 0) return;
+    
+    try {
+        // Swap orders
+        const currentOrder = heroSlides[slideIndex].order || slideIndex;
+        const previousOrder = heroSlides[slideIndex - 1].order || (slideIndex - 1);
+        
+        await updateDoc(doc(db, 'heroSlides', slideId), { order: previousOrder });
+        await updateDoc(doc(db, 'heroSlides', heroSlides[slideIndex - 1].id), { order: currentOrder });
+        
+        showStatus('Slide moved up!', 'success');
+        await loadHeroSlides();
+    } catch (error) {
+        console.error('Error moving slide up:', error);
+        showStatus('Error moving slide: ' + error.message, 'error');
+    }
+}
+
+async function moveSlideDown(slideId) {
+    const slideIndex = heroSlides.findIndex(slide => slide.id === slideId);
+    if (slideIndex >= heroSlides.length - 1) return;
+    
+    try {
+        // Swap orders
+        const currentOrder = heroSlides[slideIndex].order || slideIndex;
+        const nextOrder = heroSlides[slideIndex + 1].order || (slideIndex + 1);
+        
+        await updateDoc(doc(db, 'heroSlides', slideId), { order: nextOrder });
+        await updateDoc(doc(db, 'heroSlides', heroSlides[slideIndex + 1].id), { order: currentOrder });
+        
+        showStatus('Slide moved down!', 'success');
+        await loadHeroSlides();
+    } catch (error) {
+        console.error('Error moving slide down:', error);
+        showStatus('Error moving slide: ' + error.message, 'error');
+    }
+}
+
+function uploadHeroSlideImage(slideId) {
+    openCloudinaryWidget((imageUrl) => {
+        document.getElementById(`slideImage_${slideId}`).value = imageUrl;
+        showStatus('Image uploaded successfully!', 'success');
+        loadHeroSlides(); // Refresh to show preview
+    });
+}
+
+async function saveSliderSettings() {
+    try {
+        const duration = parseInt(document.getElementById('sliderDuration').value) || 5;
+        const enabled = document.getElementById('sliderEnabled').checked;
+        
+        await setDoc(doc(db, 'content', 'sliderSettings'), {
+            duration: duration,
+            enabled: enabled,
+            updatedAt: new Date()
+        });
+        
+        showStatus('Slider settings saved successfully!', 'success');
+    } catch (error) {
+        console.error('Error saving slider settings:', error);
+        showStatus('Error saving settings: ' + error.message, 'error');
+    }
+}
+
+async function refreshHeroSlider() {
+    try {
+        await loadHeroSlides();
+        await loadSliderSettings();
+        showStatus('Hero slider refreshed!', 'success');
+    } catch (error) {
+        console.error('Error refreshing hero slider:', error);
+        showStatus('Error refreshing slider: ' + error.message, 'error');
+    }
+}
+
+// Make hero slider functions globally available
+window.addHeroSlide = addHeroSlide;
+window.updateHeroSlide = updateHeroSlide;
+window.deleteHeroSlide = deleteHeroSlide;
+window.moveSlideUp = moveSlideUp;
+window.moveSlideDown = moveSlideDown;
+window.uploadHeroSlideImage = uploadHeroSlideImage;
+window.saveSliderSettings = saveSliderSettings;
+window.refreshHeroSlider = refreshHeroSlider;

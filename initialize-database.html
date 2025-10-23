@@ -204,6 +204,19 @@
                 log(`✅ Project added: ${project.name}`);
             }
 
+            // Testimonials Section
+            log('📝 Creating Testimonials Section...');
+            await setDoc(doc(db, 'content', 'testimonials'), {
+                enabled: true,
+                title: 'Daniel + Wonitta | Construct.',
+                description: 'Hear from our wonderful clients, Daniel and Wonitta, as they share their experience working with Atelia on their contemporary renovation of their home at Donvale 82. In this testimonial, Daniel and Wonitta walk us through the journey of transforming their living space to an open-concept design, a luxurious new bathroom, and a stylish outdoor area. They discuss how Atelia brought their vision to life, focusing on both functionality and modern design.',
+                cta: 'View all our testimonials →',
+                videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                videoTitle: 'Atelia Built | Donvale 82 - Project Testimonial'
+            });
+            log('✅ Testimonials Section created');
+
             // About Section
             log('📝 Creating About Section...');
             await setDoc(doc(db, 'content', 'about'), {

@@ -574,6 +574,177 @@
             gap: 15px;
         }
 
+        /* Dashboard Styles */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 4px solid #3A3A3A;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-card.projects {
+            border-left-color: #4CAF50;
+        }
+
+        .stat-card.services {
+            border-left-color: #2196F3;
+        }
+
+        .stat-card.news {
+            border-left-color: #FF9800;
+        }
+
+        .stat-card.bookings {
+            border-left-color: #F44336;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.9;
+        }
+
+        .stat-card.projects .stat-icon {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
+        .stat-card.services .stat-icon {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196F3;
+        }
+
+        .stat-card.news .stat-icon {
+            background: rgba(255, 152, 0, 0.1);
+            color: #FF9800;
+        }
+
+        .stat-card.bookings .stat-icon {
+            background: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2A2A2A;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-change {
+            font-size: 12px;
+            color: #4CAF50;
+            margin-top: 8px;
+        }
+
+        .dashboard-quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .quick-action-btn {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 6px;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #2A2A2A;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .quick-action-btn:hover {
+            border-color: #3A3A3A;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .quick-action-icon {
+            width: 24px;
+            height: 24px;
+            color: #3A3A3A;
+        }
+
+        .recent-bookings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .recent-booking-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #4CAF50;
+            transition: all 0.3s ease;
+        }
+
+        .recent-booking-item:hover {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .recent-booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .recent-booking-name {
+            font-weight: 600;
+            color: #2A2A2A;
+            font-size: 14px;
+        }
+
+        .recent-booking-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .recent-booking-service {
+            font-size: 13px;
+            color: #666;
+        }
+
         .status-item {
             display: flex;
             align-items: center;
@@ -726,13 +897,25 @@
             </div>
             
             <div class="sidebar-menu">
-                <div class="menu-item active" data-section="hero">
+                <div class="menu-item active" data-section="dashboard">
                     <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span>Dashboard</span>
+                </div>
+                <div class="menu-item" data-section="hero">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     <span>Hero Section</span>
+                </div>
+                <div class="menu-item" data-section="hero-slider">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span>Hero Background Slider</span>
                 </div>
                 <div class="menu-item" data-section="projects">
                     <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     <span>Projects</span>
+                </div>
+                <div class="menu-item" data-section="testimonials">
+                    <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    <span>Testimonials</span>
                 </div>
                 <div class="menu-item" data-section="about">
                     <svg class="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -773,7 +956,7 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="top-bar">
-                <h1 style="font-size: 24px; color: #2A2A2A;">Dashboard</h1>
+                <h1 id="pageTitle" style="font-size: 24px; color: #2A2A2A;">Dashboard</h1>
                 <div class="user-info">
                     <a href="/" target="_blank" class="preview-btn" title="View Live Site">
                         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -789,8 +972,102 @@
 
             <div id="statusMessage" class="status hidden"></div>
 
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="content-section active">
+                <div class="section">
+                    <h3>📊 Overview</h3>
+                    <p style="color: #666; margin-bottom: 30px;">Welcome to your admin dashboard. Here's a quick overview of your site content.</p>
+                    
+                    <!-- Stats Cards -->
+                    <div class="dashboard-stats">
+                        <div class="stat-card projects">
+                            <div class="stat-header">
+                                <div>
+                                    <div class="stat-number" id="totalProjects">0</div>
+                                    <div class="stat-label">Total Projects</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card services">
+                            <div class="stat-header">
+                                <div>
+                                    <div class="stat-number" id="totalServices">0</div>
+                                    <div class="stat-label">Total Services</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card news">
+                            <div class="stat-header">
+                                <div>
+                                    <div class="stat-number" id="totalNews">0</div>
+                                    <div class="stat-label">News Articles</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stat-card bookings">
+                            <div class="stat-header">
+                                <div>
+                                    <div class="stat-number" id="totalBookings">0</div>
+                                    <div class="stat-label">Total Bookings</div>
+                                </div>
+                                <div class="stat-icon">
+                                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <h3 style="margin-top: 30px;">⚡ Quick Actions</h3>
+                    <div class="dashboard-quick-actions">
+                        <div class="quick-action-btn menu-item" data-section="projects">
+                            <svg class="quick-action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            <span>Add New Project</span>
+                        </div>
+                        <div class="quick-action-btn menu-item" data-section="services">
+                            <svg class="quick-action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            <span>Add New Service</span>
+                        </div>
+                        <div class="quick-action-btn menu-item" data-section="news">
+                            <svg class="quick-action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            <span>Add News Article</span>
+                        </div>
+                        <div class="quick-action-btn menu-item" data-section="bookings">
+                            <svg class="quick-action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            <span>View Bookings</span>
+                        </div>
+                        <a href="/" target="_blank" class="quick-action-btn">
+                            <svg class="quick-action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            <span>View Live Site</span>
+                        </a>
+                        <div class="quick-action-btn menu-item" data-section="settings">
+                            <svg class="quick-action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            <span>Site Settings</span>
+                        </div>
+                    </div>
+
+                    <!-- Recent Bookings -->
+                    <h3 style="margin-top: 30px;">📬 Recent Bookings</h3>
+                    <div id="recentBookingsList" class="recent-bookings-list">
+                        <p style="text-align: center; color: #999; padding: 20px;">Loading recent bookings...</p>
+                    </div>
+                </div>
+            </div>
+
             <!-- Hero Section -->
-            <div id="hero-section" class="content-section active">
+            <div id="hero-section" class="content-section">
                 <div class="section">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <h3 style="margin: 0;">Hero Section</h3>
@@ -814,6 +1091,40 @@
                         <input type="text" id="heroButtonText">
                     </div>
                     <button onclick="saveHero()" class="btn btn-success">Save Changes</button>
+                </div>
+            </div>
+
+            <!-- Hero Background Slider Section -->
+            <div id="hero-slider-section" class="content-section">
+                <div class="section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0;">Hero Background Slider</h3>
+                        <div>
+                            <button onclick="refreshHeroSlider()" class="btn-small" style="margin-right: 10px;">Refresh Slider</button>
+                            <a href="/" target="_blank" class="btn-small">View on Site</a>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-card">
+                        <h4>Slider Settings</h4>
+                        <div class="form-group">
+                            <label for="sliderDuration">Slide Duration (seconds):</label>
+                            <input type="number" id="sliderDuration" min="2" max="30" value="5">
+                            <small>How long each slide is displayed before transitioning to the next</small>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" id="sliderEnabled" style="width: auto; cursor: pointer;" checked>
+                                <span style="font-weight: 600; color: #2A2A2A;">Enable Background Slider</span>
+                            </label>
+                            <small style="display: block; margin-top: 5px; color: #666;">Uncheck to disable the slider and use a single background image</small>
+                        </div>
+                        <button onclick="saveSliderSettings()" class="btn btn-success">Save Settings</button>
+                    </div>
+
+                    <h3 style="margin-top: 30px;">Slider Images</h3>
+                    <div id="heroSlidesList"></div>
+                    <button onclick="addHeroSlide()" class="btn">Add New Slide</button>
                 </div>
             </div>
 
@@ -842,6 +1153,51 @@
                     <h3>Project Items</h3>
                     <div id="projectsList"></div>
                     <button onclick="addProject()" class="btn">Add New Project</button>
+                </div>
+            </div>
+
+            <!-- Testimonials Section -->
+            <div id="testimonials-section" class="content-section">
+                <div class="section">
+                    <h3>Testimonials Section</h3>
+                    
+                    <!-- Enable/Disable Toggle -->
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                            <input type="checkbox" id="testimonialsEnabled" style="width: auto; cursor: pointer;">
+                            <span style="font-weight: 600; color: #2A2A2A;">Enable Testimonials Section</span>
+                        </label>
+                        <small style="display: block; margin-top: 5px; color: #666;">Uncheck to hide this section from the homepage</small>
+                    </div>
+
+                    <div id="testimonialsContent">
+                        <div class="form-group">
+                            <label for="testimonialsTitle">Title:</label>
+                            <input type="text" id="testimonialsTitle" placeholder="Daniel + Wonitta | Construct.">
+                        </div>
+                        <div class="form-group">
+                            <label for="testimonialsDescription">Description:</label>
+                            <textarea id="testimonialsDescription" rows="6" placeholder="Hear from our wonderful clients..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="testimonialsCTA">CTA Link Text:</label>
+                            <input type="text" id="testimonialsCTA" placeholder="View all our testimonials →">
+                        </div>
+                        <div class="form-group">
+                            <label for="testimonialsVideoUrl">YouTube Video URL:</label>
+                            <input type="url" id="testimonialsVideoUrl" placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
+                            <small style="display: block; margin-top: 8px; color: #666;">
+                                📹 Enter the full YouTube video URL (e.g., https://www.youtube.com/watch?v=dQw4w9WgXcQ).<br>
+                                The system will automatically convert it to an embed URL.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="testimonialsVideoTitle">Video Title (for accessibility):</label>
+                            <input type="text" id="testimonialsVideoTitle" placeholder="Atelia Built | Donvale 82 - Project Testimonial">
+                        </div>
+                    </div>
+                    
+                    <button onclick="saveTestimonials()" class="btn btn-success">Save Changes</button>
                 </div>
             </div>
 
@@ -1128,15 +1484,20 @@ Go to Firebase Console → Authentication → Users → Reset Password</pre>
                         <div class="url-list">
                             <div class="url-item">
                                 <span class="url-label">Website:</span>
-                                <a href="https://atelia-a0e81.web.app" target="_blank">https://atelia-a0e81.web.app</a>
+                                <a href="https://ateliabuilt.com.au" target="_blank">https://ateliabuilt.com.au</a>
                             </div>
                             <div class="url-item">
                                 <span class="url-label">Admin Panel:</span>
-                                <a href="https://atelia-a0e81.web.app/admin" target="_blank">https://atelia-a0e81.web.app/admin</a>
+                                <a href="https://ateliabuilt.com.au/admin" target="_blank">https://ateliabuilt.com.au/admin</a>
                             </div>
                             <div class="url-item">
                                 <span class="url-label">Login Page:</span>
-                                <a href="https://atelia-a0e81.web.app/login" target="_blank">https://atelia-a0e81.web.app/login</a>
+                                <a href="https://ateliabuilt.com.au/login" target="_blank">https://ateliabuilt.com.au/login</a>
+                            </div>
+                            <div class="url-item">
+                                <span class="url-label">Firebase Hosting:</span>
+                                <a href="https://atelia-a0e81.web.app" target="_blank">https://atelia-a0e81.web.app</a>
+                                <span style="color: #999; font-size: 11px; margin-left: 10px;">(Fallback URL)</span>
                             </div>
                             <div class="url-item">
                                 <span class="url-label">Firebase Console:</span>
@@ -1330,13 +1691,43 @@ firebase emulators:start</pre>
                 item.addEventListener('click', function() {
                     const section = this.dataset.section;
                     
-                    // Update active menu item
-                    menuItems.forEach(mi => mi.classList.remove('active'));
-                    this.classList.add('active');
+                    if (!section) return; // Skip if no section data
+                    
+                    // Update active menu item (only sidebar items)
+                    document.querySelectorAll('.sidebar .menu-item').forEach(mi => mi.classList.remove('active'));
+                    const sidebarItem = document.querySelector(`.sidebar .menu-item[data-section="${section}"]`);
+                    if (sidebarItem) {
+                        sidebarItem.classList.add('active');
+                    }
                     
                     // Show corresponding content section
                     contentSections.forEach(cs => cs.classList.remove('active'));
-                    document.getElementById(section + '-section').classList.add('active');
+                    const targetSection = document.getElementById(section + '-section');
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                        // Scroll to top of main content
+                        document.querySelector('.main-content').scrollTop = 0;
+                    }
+                    
+                    // Update page title
+                    const pageTitleEl = document.getElementById('pageTitle');
+                    if (pageTitleEl) {
+                        const titles = {
+                            'dashboard': 'Dashboard',
+                            'hero': 'Hero Section',
+                            'hero-slider': 'Hero Background Slider',
+                            'projects': 'Projects',
+                            'testimonials': 'Testimonials',
+                            'about': 'About Section',
+                            'services': 'Services',
+                            'news': 'News',
+                            'cta': 'CTA Section',
+                            'bookings': 'Bookings',
+                            'settings': 'Site Settings',
+                            'dev-info': 'Developer Info'
+                        };
+                        pageTitleEl.textContent = titles[section] || 'Dashboard';
+                    }
                 });
             });
         });

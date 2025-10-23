@@ -8,17 +8,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Hero Background Slider -->
+    <div class="hero-background-slider" id="heroBackgroundSlider">
+        <!-- Slides will be dynamically added here -->
+    </div>
+
     <header class="header">
         <div class="header-container">
             <div class="logo">
                 <h1>Atelia Built.</h1>
             </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">☰</button>
             <nav class="navigation">
                 <ul>
                     <li><a href="#about">ABOUT</a></li>
-                    <li><a href="#projects">PROJECTS</a></li>
-                    <li><a href="#services">SERVICES</a></li>
-                    <li><a href="login.html">LOGIN</a></li>
+                    <li><a href="/projects">PROJECTS</a></li>
+                    <li><a href="/services">SERVICES</a></li>
+                    <li><a href="/news">NEWS</a></li>
+                    <li><a href="/login">LOGIN</a></li>
                 </ul>
             </nav>
             <div class="header-actions">
@@ -43,7 +50,7 @@
                 <h2 class="projects-title slide-in-left">Projects.</h2>
                 <div class="projects-description slide-in-right">
                     <p>A trusted luxury home builder dedicated to turning thoughtful designs into enduring, tangible homes</p>
-                    <a href="#projects" class="view-projects-link">View all our projects →</a>
+                    <a href="/projects" class="view-projects-link">View all our projects →</a>
                 </div>
             </div>
             
@@ -154,7 +161,7 @@
             </div>
             
             <div class="services-cta">
-                <button class="explore-services-btn architectural-btn fade-in">Explore all our services</button>
+                <a href="/services" class="explore-services-btn architectural-btn fade-in" style="text-decoration: none; display: inline-block;">Explore all our services</a>
             </div>
         </div>
     </section>
@@ -291,7 +298,7 @@
             </div>
             
             <div class="news-cta">
-                <button class="explore-news-btn architectural-btn fade-in">Watch the full episode</button>
+                <a href="/news" class="explore-news-btn architectural-btn fade-in" style="text-decoration: none; display: inline-block;">View all news & features</a>
             </div>
         </div>
     </section>
@@ -368,9 +375,10 @@
                         <ul>
                             <li><a href="#testimonials">Testimonials</a></li>
                             <li><a href="#about">About</a></li>
-                            <li><a href="#services">Services</a></li>
+                            <li><a href="/services">Services</a></li>
+                            <li><a href="/news">News</a></li>
                             <li><a href="#contact">Contact</a></li>
-                            <li><a href="#projects">Projects</a></li>
+                            <li><a href="/projects">Projects</a></li>
                         </ul>
                     </div>
 
@@ -414,6 +422,7 @@
     
     <script src="animations.js"></script>
     <script type="module" src="firebase-cms.js"></script>
+    <script type="module" src="hero-slider.js"></script>
     <script type="module" src="booking.js"></script>
 </body>
 </html>

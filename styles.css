@@ -10,14 +10,54 @@ html {
 
 body {
     font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Hero Background Slider */
+.hero-background-slider {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+
+.hero-slide.active {
+    opacity: 1;
+}
+
+/* Fallback background for when no slides are loaded */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-image: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2016&q=80');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    min-height: 100vh;
-    position: relative;
     background-attachment: fixed;
-    overflow-x: hidden;
+    z-index: -2;
 }
 
 /* Architectural Animation Classes */
@@ -1465,5 +1505,373 @@ body {
 
     .modal-content h2 {
         font-size: 24px;
+    }
+}
+
+/* Additional Mobile Enhancements for All Pages */
+@media (max-width: 1024px) {
+    /* Tablet optimizations */
+    .header-container {
+        padding: 0 30px;
+    }
+    
+    .projects-grid,
+    .services-grid,
+    .news-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .process-steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    /* Hide desktop elements on mobile */
+    body {
+        background-attachment: scroll; /* Better mobile performance */
+    }
+    
+    /* Mobile header improvements */
+    .header {
+        position: relative; /* Better mobile scrolling */
+    }
+    
+    .header-container {
+        padding: 15px 20px;
+    }
+    
+    .logo h1 {
+        font-size: 20px;
+    }
+    
+    .navigation ul {
+        font-size: 12px;
+        gap: 15px;
+    }
+    
+    .header-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .phone-number {
+        font-size: 12px;
+    }
+    
+    .book-here-btn {
+        padding: 10px 20px;
+        font-size: 12px;
+    }
+    
+    /* Improve touch targets for mobile */
+    button,
+    a.btn,
+    .architectural-btn {
+        min-height: 44px; /* iOS recommended touch target size */
+        padding: 12px 24px;
+    }
+    
+    /* Projects/Services page hero responsive */
+    .projects-page-hero,
+    .services-page-hero {
+        padding: 80px 20px 40px;
+    }
+    
+    .projects-page-hero h1,
+    .services-page-hero h1 {
+        font-size: 2.5rem;
+        line-height: 1.2;
+    }
+    
+    .projects-page-hero p,
+    .services-page-hero p {
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+    
+    /* Grid improvements */
+    .all-projects-grid,
+    .all-services-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 0 10px;
+    }
+    
+    /* Video container responsive */
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        height: 0;
+        overflow: hidden;
+    }
+    
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    /* Improve form layouts on mobile */
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Better spacing on mobile */
+    .section {
+        padding: 60px 20px;
+    }
+    
+    .all-projects-section,
+    .all-services-section {
+        padding: 60px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small mobile devices */
+    .logo h1 {
+        font-size: 18px;
+    }
+    
+    .navigation ul {
+        font-size: 11px;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .phone-number {
+        order: -1;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .book-here-btn {
+        width: 100%;
+    }
+    
+    /* Hero responsive */
+    .hero-headline {
+        font-size: 24px;
+        line-height: 1.3;
+        padding: 0 10px;
+    }
+    
+    .discovery-call-btn,
+    .architectural-btn {
+        width: 100%;
+        max-width: 300px;
+        padding: 14px 20px;
+        font-size: 13px;
+    }
+    
+    /* Page hero improvements */
+    .projects-page-hero h1,
+    .services-page-hero h1 {
+        font-size: 2rem;
+    }
+    
+    /* Card improvements */
+    .project-item,
+    .service-card,
+    .news-card {
+        margin: 0 auto;
+        max-width: 400px;
+    }
+    
+    /* Text sizing for readability */
+    .projects-title,
+    .services-title,
+    .about-title,
+    .news-title {
+        font-size: 28px;
+    }
+    
+    .testimonials-title {
+        font-size: 20px;
+    }
+    
+    .testimonials-description,
+    .about-description {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    
+    /* Process steps mobile */
+    .process-steps {
+        grid-template-columns: 1fr;
+    }
+    
+    .step-title {
+        font-size: 18px;
+    }
+    
+    .step-description {
+        font-size: 13px;
+    }
+    
+    /* Footer mobile improvements */
+    .footer-logo {
+        font-size: 20px;
+    }
+    
+    .footer-tagline,
+    .footer-column ul li {
+        font-size: 13px;
+    }
+    
+    /* Modal improvements for small screens */
+    .modal {
+        padding: 20px 10px;
+    }
+    
+    .modal-content {
+        max-width: 100%;
+        margin: 0 10px;
+    }
+    
+    .close-modal {
+        font-size: 32px;
+        padding: 5px 15px;
+    }
+    
+    /* All grids should be single column on small mobile */
+    .all-projects-grid,
+    .all-services-grid,
+    .dashboard-stats,
+    .dashboard-quick-actions {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Landscape orientation improvements */
+@media (max-height: 600px) and (orientation: landscape) {
+    .hero-section {
+        min-height: 100vh;
+        padding: 60px 20px;
+    }
+    
+    .projects-page-hero,
+    .services-page-hero {
+        padding: 60px 20px 30px;
+    }
+    
+    .header {
+        position: relative;
+    }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Ensure images look crisp on retina displays */
+    img {
+        image-rendering: -webkit-optimize-contrast;
+    }
+}
+
+/* Dark mode support (if device prefers dark mode) */
+@media (prefers-color-scheme: dark) {
+    /* This is optional - can be implemented later if needed */
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .fade-in,
+    .slide-in-left,
+    .slide-in-right,
+    .scale-in,
+    .stagger-item {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Mobile Navigation Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #2A2A2A;
+    padding: 5px 10px;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+.mobile-menu-toggle:hover {
+    opacity: 0.7;
+}
+
+.mobile-menu-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Show mobile menu toggle on small screens */
+@media (max-width: 768px) {
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    /* Hide navigation by default on mobile, show when toggled */
+    .navigation {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(228, 225, 213, 0.98);
+        backdrop-filter: blur(10px);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    .navigation.active {
+        max-height: 500px;
+        padding: 20px 0;
+    }
+    
+    .navigation ul {
+        flex-direction: column;
+        padding: 0 20px;
+    }
+    
+    .navigation ul li {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .navigation ul li:last-child {
+        border-bottom: none;
+    }
+    
+    .navigation ul li a {
+        display: block;
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    /* Adjust header layout for mobile menu */
+    .header-container {
+        position: relative;
     }
 }

@@ -24,6 +24,18 @@
       {
         "source": "/admin",
         "destination": "/admin.html"
+      },
+      {
+        "source": "/projects",
+        "destination": "/projects.html"
+      },
+      {
+        "source": "/services",
+        "destination": "/services.html"
+      },
+      {
+        "source": "/news",
+        "destination": "/news.html"
       }
     ],
     "headers": [
