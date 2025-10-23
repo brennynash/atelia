@@ -20,7 +20,9 @@ const db = getFirestore(app);
 // Load all content when page loads
 document.addEventListener('DOMContentLoaded', async function() {
     try {
+        console.log('Starting to load all content...');
         await loadAllContent();
+        console.log('Finished loading all content');
     } catch (error) {
         console.error('Error loading content:', error);
         // Page will show default content if Firebase fails
@@ -82,11 +84,15 @@ async function loadProjectsSection() {
 
         // Load project items (limited to 4 for homepage)
         const projectsSnapshot = await getDocs(collection(db, 'projects'));
-        const projectsGrid = document.querySelector('.projects-grid');
+        const projectsGrid = document.getElementById('homeProjectsGrid');
+        
+        console.log('Projects snapshot:', projectsSnapshot);
+        console.log('Projects snapshot empty:', projectsSnapshot.empty);
+        console.log('Projects grid element:', projectsGrid);
         
         if (projectsGrid && !projectsSnapshot.empty) {
-            // Only clear existing content if we have data to replace it with
-            projectsGrid.innerHTML = '';
+            console.log('Clearing projects grid and loading CMS data');
+            projectsGrid.innerHTML = ''; // Clear existing/loading content
             
             // Limit to 4 projects on homepage to avoid overload
             let count = 0;
@@ -107,8 +113,9 @@ async function loadProjectsSection() {
                     count++;
                 }
             });
+        } else {
+            console.log('Keeping default projects content - no CMS data or grid not found');
         }
-        // If no projects in Firestore, keep the default HTML content (don't clear it)
     } catch (error) {
         console.error('Error loading projects section:', error);
     }
@@ -196,11 +203,15 @@ async function loadServicesSection() {
 
         // Load service items (limited to 3 for homepage)
         const servicesSnapshot = await getDocs(collection(db, 'services'));
-        const servicesGrid = document.querySelector('.services-grid');
+        const servicesGrid = document.getElementById('homeServicesGrid');
+        
+        console.log('Services snapshot:', servicesSnapshot);
+        console.log('Services snapshot empty:', servicesSnapshot.empty);
+        console.log('Services grid element:', servicesGrid);
         
         if (servicesGrid && !servicesSnapshot.empty) {
-            // Only clear existing content if we have data to replace it with
-            servicesGrid.innerHTML = '';
+            console.log('Clearing services grid and loading CMS data');
+            servicesGrid.innerHTML = ''; // Clear existing/loading content
             
             // Limit to 3 services on homepage to avoid overload
             let count = 0;
@@ -222,8 +233,9 @@ async function loadServicesSection() {
                     count++;
                 }
             });
+        } else {
+            console.log('Keeping default services content - no CMS data or grid not found');
         }
-        // If no services in Firestore, keep the default HTML content (don't clear it)
     } catch (error) {
         console.error('Error loading services section:', error);
     }
