@@ -2239,6 +2239,7 @@ function renderHeroSlidesList() {
     
     if (heroSlides.length === 0) {
         container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">No slides added yet. Click "Add New Slide" to get started.</p>';
+        updateSliderPreview();
         return;
     }
     
@@ -2277,6 +2278,90 @@ function renderHeroSlidesList() {
         `;
         container.appendChild(slideDiv);
     });
+    
+    // Update the preview
+    updateSliderPreview();
+}
+
+// Update the slider preview in admin panel
+let previewSlideIndex = 0;
+let previewInterval = null;
+
+function updateSliderPreview() {
+    const preview = document.getElementById('heroSliderPreview');
+    if (!preview) return;
+    
+    // Clear existing interval
+    if (previewInterval) {
+        clearInterval(previewInterval);
+        previewInterval = null;
+    }
+    
+    if (heroSlides.length === 0) {
+        preview.innerHTML = `
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #999;">
+                <p>No slides to preview</p>
+                <small>Add slides below to see the preview</small>
+            </div>
+        `;
+        return;
+    }
+    
+    // Clear and set up preview
+    preview.innerHTML = '';
+    
+    // Create slide elements for preview
+    const previewSlides = heroSlides.map((slide, index) => {
+        const slideEl = document.createElement('div');
+        slideEl.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('${slide.imageUrl}');
+            background-size: cover;
+            background-position: center;
+            opacity: ${index === 0 ? '1' : '0'};
+            transition: opacity 1s ease-in-out;
+        `;
+        preview.appendChild(slideEl);
+        return slideEl;
+    });
+    
+    // Add slide counter
+    const counter = document.createElement('div');
+    counter.style.cssText = `
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        z-index: 10;
+    `;
+    counter.textContent = `1 / ${heroSlides.length}`;
+    preview.appendChild(counter);
+    
+    // Start preview slider if more than 1 slide
+    if (heroSlides.length > 1) {
+        previewSlideIndex = 0;
+        previewInterval = setInterval(() => {
+            // Hide current slide
+            previewSlides[previewSlideIndex].style.opacity = '0';
+            
+            // Move to next slide
+            previewSlideIndex = (previewSlideIndex + 1) % heroSlides.length;
+            
+            // Show next slide
+            previewSlides[previewSlideIndex].style.opacity = '1';
+            
+            // Update counter
+            counter.textContent = `${previewSlideIndex + 1} / ${heroSlides.length}`;
+        }, 3000); // Change slide every 3 seconds
+    }
 }
 
 async function addHeroSlide() {
