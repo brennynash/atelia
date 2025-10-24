@@ -108,6 +108,129 @@ function showStatus(message, type) {
     }
 }
 
+// Upload Progress Management
+let uploadProgressContainer = null;
+let uploadItems = new Map();
+
+function createUploadProgressContainer() {
+    if (uploadProgressContainer) {
+        return uploadProgressContainer;
+    }
+
+    const container = document.createElement('div');
+    container.className = 'upload-progress-container';
+    container.innerHTML = `
+        <div class="upload-progress-header">
+            <h3 class="upload-progress-title">Uploading Images</h3>
+            <button class="upload-progress-close" onclick="hideUploadProgress()">&times;</button>
+        </div>
+        <div class="upload-items-list"></div>
+    `;
+    
+    document.body.appendChild(container);
+    uploadProgressContainer = container;
+    return container;
+}
+
+function addUploadItem(file, uploadId) {
+    const container = createUploadProgressContainer();
+    const itemsList = container.querySelector('.upload-items-list');
+    
+    const item = document.createElement('div');
+    item.className = 'upload-item';
+    item.id = `upload-item-${uploadId}`;
+    
+    // Create preview
+    const preview = document.createElement('img');
+    preview.className = 'upload-preview';
+    preview.src = URL.createObjectURL(file);
+    
+    const filename = document.createElement('p');
+    filename.className = 'upload-filename';
+    filename.textContent = file.name;
+    
+    const status = document.createElement('span');
+    status.className = 'upload-status';
+    status.innerHTML = '<div class="upload-spinner"></div>';
+    
+    const progressBar = document.createElement('div');
+    progressBar.className = 'upload-progress-bar';
+    progressBar.innerHTML = '<div class="upload-progress-fill uploading"></div>';
+    
+    const progressText = document.createElement('div');
+    progressText.className = 'upload-progress-text';
+    progressText.textContent = 'Preparing...';
+    
+    const header = document.createElement('div');
+    header.className = 'upload-item-header';
+    header.appendChild(preview);
+    header.appendChild(filename);
+    header.appendChild(status);
+    
+    item.appendChild(header);
+    item.appendChild(progressBar);
+    item.appendChild(progressText);
+    
+    itemsList.appendChild(item);
+    uploadItems.set(uploadId, {
+        element: item,
+        progressFill: item.querySelector('.upload-progress-fill'),
+        progressText: progressText,
+        status: status,
+        file: file
+    });
+    
+    return item;
+}
+
+function updateUploadProgress(uploadId, progress, status = 'uploading') {
+    const uploadItem = uploadItems.get(uploadId);
+    if (!uploadItem) return;
+    
+    const { progressFill, progressText, status: statusEl } = uploadItem;
+    
+    progressFill.style.width = `${progress}%`;
+    progressText.textContent = `${Math.round(progress)}%`;
+    
+    if (status === 'uploading') {
+        progressFill.className = 'upload-progress-fill uploading';
+        statusEl.innerHTML = '<div class="upload-spinner"></div>';
+    } else if (status === 'success') {
+        progressFill.className = 'upload-progress-fill';
+        progressFill.style.width = '100%';
+        progressText.textContent = 'Complete';
+        statusEl.innerHTML = '<span class="upload-success-icon">✓</span>';
+    } else if (status === 'error') {
+        progressFill.className = 'upload-progress-fill error';
+        progressText.textContent = 'Failed';
+        statusEl.innerHTML = '<span class="upload-error-icon">✗</span>';
+    }
+}
+
+function removeUploadItem(uploadId) {
+    const uploadItem = uploadItems.get(uploadId);
+    if (uploadItem) {
+        uploadItem.element.remove();
+        uploadItems.delete(uploadId);
+        
+        // Clean up object URL
+        URL.revokeObjectURL(uploadItem.file);
+        
+        // Hide container if no more items
+        if (uploadItems.size === 0) {
+            hideUploadProgress();
+        }
+    }
+}
+
+function hideUploadProgress() {
+    if (uploadProgressContainer) {
+        uploadProgressContainer.remove();
+        uploadProgressContainer = null;
+        uploadItems.clear();
+    }
+}
+
 // Load Dashboard Statistics
 async function loadDashboardStats() {
     try {
@@ -813,26 +936,39 @@ async function deleteProject(projectId) {
 
 // Upload multiple images for a project
 // Custom lightweight image upload
-async function uploadToCloudinary(file, folder) {
+async function uploadToCloudinary(file, folder, uploadId = null, onProgress = null) {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', cloudinaryConfig.uploadPreset);
     formData.append('folder', folder);
     
-    const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`,
-        {
-            method: 'POST',
-            body: formData
-        }
-    );
-    
-    if (!response.ok) {
-        throw new Error('Upload failed');
-    }
-    
-    const data = await response.json();
-    return data.secure_url;
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        
+        // Track upload progress
+        xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable && onProgress) {
+                const progress = (e.loaded / e.total) * 100;
+                onProgress(progress);
+            }
+        });
+        
+        xhr.addEventListener('load', () => {
+            if (xhr.status === 200) {
+                const data = JSON.parse(xhr.responseText);
+                resolve(data.secure_url);
+            } else {
+                reject(new Error('Upload failed'));
+            }
+        });
+        
+        xhr.addEventListener('error', () => {
+            reject(new Error('Upload failed'));
+        });
+        
+        xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`);
+        xhr.send(formData);
+    });
 }
 
 function uploadProjectImages(projectId) {
@@ -861,15 +997,33 @@ function uploadProjectImages(projectId) {
             return;
         }
         
-        showStatus(`Uploading ${files.length} image${files.length > 1 ? 's' : ''}...`, 'info');
+        // Create upload progress items
+        const uploadIds = files.map((file, index) => {
+            const uploadId = `project-${projectId}-${Date.now()}-${index}`;
+            addUploadItem(file, uploadId);
+            return uploadId;
+        });
         
         try {
             // Get current project
             const currentProject = projects.find(p => p.id === projectId);
             const currentImages = currentProject.images || [];
             
-            // Upload all files
-            const uploadPromises = files.map(file => uploadToCloudinary(file, 'atelia/projects'));
+            // Upload all files with progress tracking
+            const uploadPromises = files.map(async (file, index) => {
+                const uploadId = uploadIds[index];
+                try {
+                    const url = await uploadToCloudinary(file, 'atelia/projects', uploadId, (progress) => {
+                        updateUploadProgress(uploadId, progress, 'uploading');
+                    });
+                    updateUploadProgress(uploadId, 100, 'success');
+                    return url;
+                } catch (error) {
+                    updateUploadProgress(uploadId, 0, 'error');
+                    throw error;
+                }
+            });
+            
             const uploadedUrls = await Promise.all(uploadPromises);
             
             // Add new images to array
@@ -885,9 +1039,18 @@ function uploadProjectImages(projectId) {
             // Reload content to show new images
             await loadContent();
             showStatus(`${files.length} image${files.length > 1 ? 's' : ''} uploaded successfully!`, 'success');
+            
+            // Remove progress items after a delay
+            setTimeout(() => {
+                uploadIds.forEach(id => removeUploadItem(id));
+            }, 2000);
+            
         } catch (err) {
             console.error('Error uploading images:', err);
             showStatus('Error uploading images: ' + err.message, 'error');
+            
+            // Remove failed upload items
+            uploadIds.forEach(id => removeUploadItem(id));
         }
     };
     
@@ -1263,14 +1426,32 @@ function uploadServiceImages(serviceId) {
             return;
         }
         
-        showStatus(`Uploading ${files.length} image${files.length > 1 ? 's' : ''}...`, 'info');
+        // Create upload progress items
+        const uploadIds = files.map((file, index) => {
+            const uploadId = `service-${serviceId}-${Date.now()}-${index}`;
+            addUploadItem(file, uploadId);
+            return uploadId;
+        });
         
         try {
             const currentService = services.find(s => s.id === serviceId);
             const currentImages = currentService.images || [];
             
-            // Upload all files
-            const uploadPromises = files.map(file => uploadToCloudinary(file, 'atelia/services'));
+            // Upload all files with progress tracking
+            const uploadPromises = files.map(async (file, index) => {
+                const uploadId = uploadIds[index];
+                try {
+                    const url = await uploadToCloudinary(file, 'atelia/services', uploadId, (progress) => {
+                        updateUploadProgress(uploadId, progress, 'uploading');
+                    });
+                    updateUploadProgress(uploadId, 100, 'success');
+                    return url;
+                } catch (error) {
+                    updateUploadProgress(uploadId, 0, 'error');
+                    throw error;
+                }
+            });
+            
             const uploadedUrls = await Promise.all(uploadPromises);
             
             // Add new images to array
@@ -1285,9 +1466,18 @@ function uploadServiceImages(serviceId) {
             // Reload content
             await loadContent();
             showStatus(`${files.length} image${files.length > 1 ? 's' : ''} uploaded successfully!`, 'success');
+            
+            // Remove progress items after a delay
+            setTimeout(() => {
+                uploadIds.forEach(id => removeUploadItem(id));
+            }, 2000);
+            
         } catch (err) {
             console.error('Error uploading images:', err);
             showStatus('Error uploading images: ' + err.message, 'error');
+            
+            // Remove failed upload items
+            uploadIds.forEach(id => removeUploadItem(id));
         }
     };
     
@@ -1629,14 +1819,32 @@ function uploadNewsImages(newsId) {
             return;
         }
         
-        showStatus(`Uploading ${files.length} image${files.length > 1 ? 's' : ''}...`, 'info');
+        // Create upload progress items
+        const uploadIds = files.map((file, index) => {
+            const uploadId = `news-${newsId}-${Date.now()}-${index}`;
+            addUploadItem(file, uploadId);
+            return uploadId;
+        });
         
         try {
             const currentNews = newsItems.find(n => n.id === newsId);
             const currentImages = currentNews.images || [];
             
-            // Upload all files
-            const uploadPromises = files.map(file => uploadToCloudinary(file, 'atelia/news'));
+            // Upload all files with progress tracking
+            const uploadPromises = files.map(async (file, index) => {
+                const uploadId = uploadIds[index];
+                try {
+                    const url = await uploadToCloudinary(file, 'atelia/news', uploadId, (progress) => {
+                        updateUploadProgress(uploadId, progress, 'uploading');
+                    });
+                    updateUploadProgress(uploadId, 100, 'success');
+                    return url;
+                } catch (error) {
+                    updateUploadProgress(uploadId, 0, 'error');
+                    throw error;
+                }
+            });
+            
             const uploadedUrls = await Promise.all(uploadPromises);
             
             // Add new images to array
@@ -1651,9 +1859,18 @@ function uploadNewsImages(newsId) {
             // Reload content
             await loadContent();
             showStatus(`${files.length} image${files.length > 1 ? 's' : ''} uploaded successfully!`, 'success');
+            
+            // Remove progress items after a delay
+            setTimeout(() => {
+                uploadIds.forEach(id => removeUploadItem(id));
+            }, 2000);
+            
         } catch (err) {
             console.error('Error uploading images:', err);
             showStatus('Error uploading images: ' + err.message, 'error');
+            
+            // Remove failed upload items
+            uploadIds.forEach(id => removeUploadItem(id));
         }
     };
     
@@ -1726,16 +1943,35 @@ function openCustomUploader(onSuccess, folder = 'atelia') {
             return;
         }
         
-        showStatus('Uploading image...', 'info');
+        // Create upload progress item
+        const uploadId = `custom-${Date.now()}`;
+        addUploadItem(file, uploadId);
         
         try {
-            const imageUrl = await uploadToCloudinary(file, folder);
+            const imageUrl = await uploadToCloudinary(file, folder, uploadId, (progress) => {
+                updateUploadProgress(uploadId, progress, 'uploading');
+            });
+            
+            updateUploadProgress(uploadId, 100, 'success');
+            
             if (onSuccess) {
                 onSuccess(imageUrl);
             }
+            
+            // Remove progress item after a delay
+            setTimeout(() => {
+                removeUploadItem(uploadId);
+            }, 2000);
+            
         } catch (err) {
             console.error('Upload error:', err);
+            updateUploadProgress(uploadId, 0, 'error');
             showStatus('Upload failed: ' + err.message, 'error');
+            
+            // Remove failed upload item
+            setTimeout(() => {
+                removeUploadItem(uploadId);
+            }, 3000);
         }
     };
     
@@ -2144,11 +2380,11 @@ async function moveSlideDown(slideId) {
 }
 
 function uploadHeroSlideImage(slideId) {
-    openCloudinaryWidget((imageUrl) => {
+    openCustomUploader((imageUrl) => {
         document.getElementById(`slideImage_${slideId}`).value = imageUrl;
         showStatus('Image uploaded successfully!', 'success');
         loadHeroSlides(); // Refresh to show preview
-    });
+    }, 'atelia/hero-slider');
 }
 
 async function saveSliderSettings() {
