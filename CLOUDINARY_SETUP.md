@@ -41,8 +41,8 @@ This CMS uses Cloudinary for image storage and delivery, providing:
 Your Cloudinary credentials are already configured in `cloudinary-config.js`:
 
 ```javascript
-cloudName: 'dhfg3suis'
-uploadPreset: 'atelia_uploads'  // This must match the preset you created
+cloudName: 'dclyw4klj'
+uploadPreset: 'graphiqmedia'  // This must match the preset you created
 ```
 
 ---
@@ -102,7 +102,7 @@ Your CMS uses **unsigned upload preset** because:
 
 ### API Secret Security
 
-⚠️ **IMPORTANT:** The API secret (`qD6PpaNK4TPjf1RIhxQQrhNX7Bo`) is **NOT** exposed in client-side code. It should only be used for server-side operations.
+⚠️ **IMPORTANT:** The API secret (`3Dwu_GxKuSq4a7eC3iq7_iKR86U`) is **NOT** exposed in client-side code. It should only be used for server-side operations.
 
 The code only uses:
 - `cloudName` (public)
@@ -124,13 +124,13 @@ Cloudinary automatically optimizes all uploaded images:
 
 ```javascript
 // Original
-https://res.cloudinary.com/dhfg3suis/image/upload/atelia/project1.jpg
+https://res.cloudinary.com/dclyw4klj/image/upload/atelia/project1.jpg
 
 // Optimized (800px width, auto quality, auto format)
-https://res.cloudinary.com/dhfg3suis/image/upload/w_800,q_auto,f_auto/atelia/project1.jpg
+https://res.cloudinary.com/dclyw4klj/image/upload/w_800,q_auto,f_auto/atelia/project1.jpg
 
 // Thumbnail (400x300, cropped)
-https://res.cloudinary.com/dhfg3suis/image/upload/w_400,h_300,c_fill,q_auto/atelia/project1.jpg
+https://res.cloudinary.com/dclyw4klj/image/upload/w_400,h_300,c_fill,q_auto/atelia/project1.jpg
 ```
 
 ---
@@ -182,7 +182,7 @@ Your uploads will be organized in Cloudinary:
 ### Problem: "Invalid credentials"
 
 **Solution:**
-1. Verify `cloudName` is: `dhfg3suis`
+1. Verify `cloudName` is: `dclyw4klj`
 2. Check that upload preset exists and is unsigned
 3. Try creating a new upload preset
 
@@ -255,11 +255,10 @@ You can add image transformations in the admin panel or in code:
 ## Your Cloudinary Details
 
 ```
-Cloud Name: dhfg3suis
-Upload Preset: atelia_uploads
-API Key: 321487164178956
+Cloud Name: dclyw4klj
+Upload Preset: graphiqmedia
+API Key: 833654195665815
 API Secret: [Hidden - Server-side only]
 ```
 
 ✅ **Cloudinary is now integrated with your CMS!**
-

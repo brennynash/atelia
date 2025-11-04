@@ -1,7 +1,7 @@
 // Cloudinary Configuration
 export const cloudinaryConfig = {
-    cloudName: 'dhfg3suis',
-    apiKey: '321487164178956',
+    cloudName: 'dclyw4klj',
+    apiKey: '833654195665815',
     // Note: API Secret should NEVER be exposed in client-side code
     // We'll use unsigned upload preset for client-side uploads
     uploadPreset: 'graphiqmedia'

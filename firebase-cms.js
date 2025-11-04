@@ -542,7 +542,7 @@ async function loadCTASection() {
     }
 }
 
-// Load Contact Information
+// Load Contact Information and Site Settings
 async function loadContactInfo() {
     try {
         const settingsDoc = await getDoc(doc(db, 'content', 'settings'));
@@ -567,12 +567,41 @@ async function loadContactInfo() {
                     }
                 }
             });
+            
+            // Apply logo font if specified
+            if (data.logoFont) {
+                applyLogoFont(data.logoFont);
+            }
         }
     } catch (error) {
         console.error('Error loading contact info:', error);
     }
 }
 
+// Apply logo font to all logo elements
+function applyLogoFont(fontName) {
+    // Load the Google Font
+    loadGoogleFont(fontName);
+    
+    // Apply font to logo elements
+    const logoElements = document.querySelectorAll('.logo, .footer-logo, header .logo a');
+    logoElements.forEach(element => {
+        element.style.fontFamily = `'${fontName}', sans-serif`;
+    });
+}
+
+// Load Google Font dynamically
+function loadGoogleFont(fontName) {
+    // Check if font is already loaded
+    const existingLink = document.querySelector(`link[href*="${fontName.replace(/\s/g, '+')}"]`);
+    if (existingLink) return;
+    
+    // Create and load font link
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/\s/g, '+')}:wght@400;500;600;700;800&display=swap`;
+    document.head.appendChild(link);
+}
+
 // Export for testing
 export { loadAllContent };
-

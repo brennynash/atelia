@@ -45,10 +45,10 @@ class HeroSlider {
         try {
             // Use Cloudinary CDN URLs for optimized image delivery
             this.slides = [
-                { id: 1, imageUrl: 'https://res.cloudinary.com/dhfg3suis/image/upload/v1761274585/slide1_aerdtw.jpg', order: 1 },
-                { id: 2, imageUrl: 'https://res.cloudinary.com/dhfg3suis/image/upload/v1761274585/slide2_gstlc4.jpg', order: 2 },
-                { id: 3, imageUrl: 'https://res.cloudinary.com/dhfg3suis/image/upload/v1761274586/slide3_wv3kaz.jpg', order: 3 },
-                { id: 4, imageUrl: 'https://res.cloudinary.com/dhfg3suis/image/upload/v1761274586/slide4_erbgp4.webp', order: 4 }
+                { id: 1, imageUrl: 'https://res.cloudinary.com/dclyw4klj/image/upload/v1762287336/atelia/services/m0rssae3bwxsia7nifrc.jpg', order: 1 },
+                { id: 2, imageUrl: 'https://res.cloudinary.com/dclyw4klj/image/upload/v1762288032/ee26cb46103027.5847f4469f45c_whm6bp.jpg', order: 2 },
+                { id: 3, imageUrl: 'https://res.cloudinary.com/dclyw4klj/image/upload/v1762288031/Demardi_Donvale__Tatjana-Plitt_075_pvk1gj.webp', order: 3 },
+                { id: 4, imageUrl: 'https://res.cloudinary.com/dclyw4klj/image/upload/v1762288031/ad98c846103027.5847f4469d5fb_o6uyt1.jpg', order: 4 }
             ];
 
             console.log('Loaded hero slides from Cloudinary:', this.slides.length);

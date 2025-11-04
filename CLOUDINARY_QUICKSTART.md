@@ -37,8 +37,8 @@ Password: Atelia2024!Admin
 
 ## ✅ What's Already Configured
 
-- ✅ Cloud Name: `dhfg3suis`
-- ✅ API Key: `321487164178956`
+- ✅ Cloud Name: `dclyw4klj`
+- ✅ API Key: `833654195665815`
 - ✅ Upload widget integrated
 - ✅ Image optimization enabled
 - ✅ CDN delivery ready
@@ -74,17 +74,17 @@ Quality: Auto
 2. Cloudinary widget opens
 3. Select image from computer
 4. Image uploads to Cloudinary
-5. URL automatically filled: `https://res.cloudinary.com/dhfg3suis/image/upload/...`
+5. URL automatically filled: `https://res.cloudinary.com/dclyw4klj/image/upload/...`
 6. Click "Update" to save
 7. Image appears on landing page ✨
 
 ### Image URLs:
 ```
 Original:
-https://res.cloudinary.com/dhfg3suis/image/upload/atelia/project1.jpg
+https://res.cloudinary.com/dclyw4klj/image/upload/atelia/project1.jpg
 
 Optimized (800px, auto quality):
-https://res.cloudinary.com/dhfg3suis/image/upload/w_800,q_auto,f_auto/atelia/project1.jpg
+https://res.cloudinary.com/dclyw4klj/image/upload/w_800,q_auto,f_auto/atelia/project1.jpg
 ```
 
 ---
@@ -118,7 +118,7 @@ To view your images:
 ### Problem: Upload fails
 ✅ **Solution:**
 1. Check preset is **Unsigned**
-2. Verify cloud name is `dhfg3suis`
+2. Verify cloud name is `dclyw4klj`
 3. Check file size (max 5MB by default)
 
 ---
@@ -165,4 +165,3 @@ Once you create the upload preset, you can:
 
 **Need Help?**
 Check `CLOUDINARY_SETUP.md` for detailed troubleshooting and advanced features.
-

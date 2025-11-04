@@ -18,16 +18,17 @@
             <div class="logo">
                 <a href="/" style="text-decoration: none; color: inherit;">
                     <h1>Atelia Built.</h1>
+                    <p class="logo-tagline">Reliable. Refined. Collaborative.</p>
                 </a>
             </div>
             <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">☰</button>
             <nav class="navigation">
                 <ul>
-                    <li><a href="#about">ABOUT</a></li>
+                    <li style="display: none;"><a href="#about">ABOUT</a></li>
                     <li><a href="projects.html">PROJECTS</a></li>
                     <li><a href="services.html">SERVICES</a></li>
-                    <li><a href="news.html">NEWS</a></li>
-                    <li><a href="login.html">LOGIN</a></li>
+                    <li style="display: none;"><a href="news.html">NEWS</a></li>
+                    <li style="display: none;"><a href="login.html">LOGIN</a></li>
                 </ul>
                 <div class="header-actions">
                     <button class="book-here-btn" onclick="openBookingModal()">BOOK HERE</button>
@@ -41,7 +42,8 @@
         <div class="hero-section">
             <div class="hero-content">
                 <h2 class="hero-headline fade-in">Dedicated to translating exceptional design into exceptional construction.</h2>
-                <button class="discovery-call-btn architectural-btn fade-in" onclick="openBookingModal()">BOOK A DISCOVERY CALL</button>
+                <p class="hero-tagline fade-in">Reliable. Refined. Collaborative.</p>
+                <button class="discovery-call-btn architectural-btn fade-in" onclick="openBookingModal()">GET IN TOUCH</button>
             </div>
         </div>
     </main>
@@ -185,8 +187,8 @@
                             <circle cx="30" cy="25" r="2" fill="#4A9B3A"/>
                         </svg>
                     </div>
-                    <h3 class="step-title">Discovery Call</h3>
-                    <p class="step-description">Once you've booked a discovery call, you'll speak with our team to discuss your project and explore how we can assist you.</p>
+                    <h3 class="step-title">Get in Touch</h3>
+                    <p class="step-description">Once you've gotten in touch, you'll speak with our team to discuss your project and explore how we can assist you.</p>
                 </div>
                 
                 <div class="process-step stagger-item">
@@ -232,12 +234,12 @@
             </div>
             
             <div class="how-it-works-cta">
-                <button class="book-discovery-btn architectural-btn fade-in" onclick="openBookingModal()">Book a Discovery Call</button>
+                <button class="book-discovery-btn architectural-btn fade-in" onclick="openBookingModal()">Get in Touch</button>
             </div>
         </div>
     </section>
 
-    <section id="news" class="news-section">
+    <section id="news" class="news-section" style="display: none;">
         <div class="news-container">
             <div class="news-header">
                 <h2 class="news-title slide-in-left">Dream Homes Revealed.</h2>
@@ -309,7 +311,7 @@
         <div class="cta-content">
             <h2 class="cta-headline fade-in">Ready to bring your dream home to life with personalized design and exceptional craftsmanship?</h2>
             <p class="cta-description fade-in">We've helped clients [like you] to design and build the home you have always imagined.</p>
-            <button class="cta-button architectural-btn fade-in" onclick="openBookingModal()">Book a Discovery Call</button>
+            <button class="cta-button architectural-btn fade-in" onclick="openBookingModal()">Get in Touch</button>
         </div>
     </section>
 
@@ -317,7 +319,7 @@
     <div id="bookingModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeBookingModal()">&times;</span>
-            <h2>Book a Discovery Call</h2>
+            <h2>Get in Touch</h2>
             <p style="color: #666; margin-bottom: 30px;">Fill out the form below and we'll get back to you shortly.</p>
             
             <form id="bookingForm">
@@ -367,6 +369,7 @@
                 <!-- Footer Brand -->
                 <div class="footer-brand">
                     <h3 class="footer-logo">Atelia Built.</h3>
+                    <p class="logo-tagline">Reliable. Refined. Collaborative.</p>
                     <p class="footer-tagline">Luxury Home builder dedicated to translating exceptional design into exceptional construction.</p>
                 </div>
 
@@ -375,10 +378,7 @@
                     <div class="footer-column">
                         <h4>Quick Links</h4>
                         <ul>
-                            <li><a href="#testimonials">Testimonials</a></li>
-                            <li><a href="#about">About</a></li>
                             <li><a href="services.html">Services</a></li>
-                            <li><a href="news.html">News</a></li>
                             <li><a href="#contact">Contact</a></li>
                             <li><a href="projects.html">Projects</a></li>
                         </ul>

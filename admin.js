@@ -420,6 +420,7 @@ async function loadContent() {
             document.getElementById('siteTagline').value = data.siteTagline || '';
             document.getElementById('siteFavicon').value = data.siteFavicon || '';
             document.getElementById('siteLogo').value = data.siteLogo || '';
+            document.getElementById('logoFont').value = data.logoFont || 'Poppins';
             document.getElementById('seoTitle').value = data.seoTitle || '';
             document.getElementById('seoDescription').value = data.seoDescription || '';
             document.getElementById('seoKeywords').value = data.seoKeywords || '';
@@ -432,6 +433,17 @@ async function loadContent() {
             document.getElementById('socialTwitter').value = data.socialTwitter || '';
             document.getElementById('hoursWeekday').value = data.hoursWeekday || '';
             document.getElementById('hoursWeekend').value = data.hoursWeekend || '';
+            
+            // Update logo preview with loaded font
+            updateLogoPreview(data.logoFont || 'Poppins');
+        }
+
+        // Setup logo font selector change listener
+        const logoFontSelect = document.getElementById('logoFont');
+        if (logoFontSelect) {
+            logoFontSelect.addEventListener('change', function() {
+                updateLogoPreview(this.value);
+            });
         }
 
     } catch (error) {
@@ -591,11 +603,14 @@ async function saveCTA() {
 
 async function saveSettings() {
     try {
+        const logoFont = document.getElementById('logoFont').value;
+        
         await setDoc(doc(db, 'content', 'settings'), {
             siteName: document.getElementById('siteName').value,
             siteTagline: document.getElementById('siteTagline').value,
             siteFavicon: document.getElementById('siteFavicon').value,
             siteLogo: document.getElementById('siteLogo').value,
+            logoFont: logoFont,
             seoTitle: document.getElementById('seoTitle').value,
             seoDescription: document.getElementById('seoDescription').value,
             seoKeywords: document.getElementById('seoKeywords').value,
@@ -613,6 +628,33 @@ async function saveSettings() {
     } catch (error) {
         showStatus('Error saving settings: ' + error.message, 'error');
     }
+}
+
+// Update logo preview with selected font
+function updateLogoPreview(fontName) {
+    const preview = document.getElementById('logoPreview');
+    const siteName = document.getElementById('siteName').value || 'Atelia Built.';
+    
+    if (preview) {
+        preview.style.fontFamily = `'${fontName}', sans-serif`;
+        preview.textContent = siteName;
+        
+        // Load the font if not already loaded
+        loadGoogleFont(fontName);
+    }
+}
+
+// Load Google Font dynamically
+function loadGoogleFont(fontName) {
+    // Check if font is already loaded
+    const existingLink = document.querySelector(`link[href*="${fontName.replace(/\s/g, '+')}"]`);
+    if (existingLink) return;
+    
+    // Create and load font link
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/\s/g, '+')}:wght@400;500;600;700;800&display=swap`;
+    document.head.appendChild(link);
 }
 
 // Change admin password
