@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xploitstech/atelia.git"
+    "url": "git+https://github.com/appsterms/ateliaprod.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/xploitstech/atelia/issues"
+    "url": "https://github.com/appsterms/ateliaprod/issues"
   },
-  "homepage": "https://github.com/xploitstech/atelia#readme"
+  "homepage": "https://github.com/appsterms/ateliaprod#readme"
 }
